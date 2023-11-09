@@ -89,7 +89,7 @@ public class PlayerPowers : MonoBehaviour
     public void AddToStack(GameObject obj)
     {
         childrenStack.Push(obj);
-        Debug.Log(childrenStack.Peek().name);
+       // Debug.Log(childrenStack.Peek().name);
     }
 
     public void TouchPowerUp(PowerUp power, string name)
@@ -115,8 +115,15 @@ public class PlayerPowers : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Tab))
         {
-            Debug.Log(childrenStack.Peek().name);
-            //Destroy(GetTopPower());
+            if (childrenStack.Count > 0)
+            {
+
+
+                var obj = childrenStack.Pop();
+                numChildren--;
+                Debug.Log(obj.name);
+                Destroy(obj);
+            }
         }
     }
     public GameObject GetTopPower()
