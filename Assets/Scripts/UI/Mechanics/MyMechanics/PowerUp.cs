@@ -131,7 +131,7 @@ public class PowerUp : MonoBehaviour
 
 
 
-                    Debug.Log("Translate");
+                  //  Debug.Log("Translate");
                     childname = "TranslatePower";
                     break;
                 case PowerupType.ROTATE:
@@ -143,6 +143,15 @@ public class PowerUp : MonoBehaviour
             }
 
             player.TouchPowerUp(this, childname);
+
+
+            //one possible method, but doesnt use the stack
+
+           /* Debug.Log(player.GetPowerUp("TranslatePower"));
+            Debug.Log(player.GetPowerUp("RotatePower"));*/
+
+
+
             /* // remove all powerup component scripts from the clone 
              // otherwise you will have an infinite loop and it will crash your PC
              Destroy(obj.GetComponent<PowerUp>());

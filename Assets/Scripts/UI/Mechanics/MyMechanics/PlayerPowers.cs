@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerPowers : MonoBehaviour
 {
     private List<GameObject> children = new List<GameObject>();
+    private Stack<GameObject> childrenStack = new Stack<GameObject>();
     [SerializeField]
     public Vector3 offset;
     [SerializeField]
@@ -14,7 +15,7 @@ public class PlayerPowers : MonoBehaviour
     int numChildren = 1;
     public List<GameObject> GetChildren(GameObject obj)
     {
-        Debug.Log("GetChildren");
+       // Debug.Log("GetChildren");
         List<GameObject> children = new List<GameObject>();
         foreach (Transform child in obj.transform)
         {
@@ -32,6 +33,7 @@ public class PlayerPowers : MonoBehaviour
             List<GameObject> moreChildren = GetChildren(children[i]);
             for (var j = 0; j < moreChildren.Count; j++)
             {
+
                 children.Add(moreChildren[j]);
             }
         }
@@ -39,9 +41,9 @@ public class PlayerPowers : MonoBehaviour
     }
 
     //* utility function to get a list of ALL children of a given game object with a particular NAME *//*
-    public List<GameObject> FindChildrenWithName(string nam, GameObject obj)
+    public List<GameObject> FindChildrenWithName(string nam)
     {
-        List<GameObject> children = GetAllChildren(obj);
+        List<GameObject> children = GetAllChildren(gameObject);
         List<GameObject> results = new List<GameObject>();
         for (var i = 0; i < children.Count; i++)
         {
@@ -53,6 +55,7 @@ public class PlayerPowers : MonoBehaviour
     private void AddChild(GameObject newChild)
     {
         var obj = Instantiate(newChild, transform);
+        AddToStack(obj);
 
         // change the name of the object, you may wish to use something different 
         // to denote the different powerups 
@@ -83,6 +86,11 @@ public class PlayerPowers : MonoBehaviour
         numChildren++;
     }
 
+    public void AddToStack(GameObject obj)
+    {
+        childrenStack.Push(obj);
+        Debug.Log(childrenStack.Peek().name);
+    }
 
     public void TouchPowerUp(PowerUp power, string name)
     {
@@ -99,7 +107,27 @@ public class PlayerPowers : MonoBehaviour
     {
         foreach (Transform child in gameObject.transform)
         {
-
+            
         }
     }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            Debug.Log(childrenStack.Peek().name);
+            //Destroy(GetTopPower());
+        }
+    }
+    public GameObject GetTopPower()
+    {
+
+        return childrenStack.Peek();
+    }
+
+    /*public int GetPowerUp(string nam)
+    {
+       return FindChildrenWithName(nam).Count;
+    }*/
+
 }
