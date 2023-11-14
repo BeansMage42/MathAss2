@@ -51,7 +51,8 @@ public class ApplyPowers : MonoBehaviour
 
                 var velocity = mouseOrigin - newMouse;
                 var newSpeed = velocity.magnitude;
-               transform.position += new Vector3(velocity.x, velocity.y, 0) * Time.deltaTime * 10 * newSpeed ;
+                
+               transform.position += new Vector3(velocity.x, velocity.y, 0) * Time.deltaTime * 25 * newSpeed ;
                 //GetComponent<Rigidbody2D>().AddForce(new Vector3(velocity.x, velocity.y, 0) * Time.deltaTime * newSpeed );
 
                 shoot = false;

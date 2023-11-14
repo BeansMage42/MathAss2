@@ -9,6 +9,7 @@ public class PlayerPowers : MonoBehaviour
     public Vector3 offset;
     [SerializeField]
     private GameObject attatchPoint;
+    private SpringJoint2D joint;
 
     string powerName;
     int numChildren = 1;
@@ -58,11 +59,21 @@ public class PlayerPowers : MonoBehaviour
     private void AddChild(GameObject newChild)
     {
         var obj = Instantiate(newChild, attatchPoint.transform);
+        if (numChildren == 1)
+        {
+            joint = gameObject.AddComponent<SpringJoint2D>();
+            joint.connectedBody = obj.GetComponent<Rigidbody2D>();
+        }
+        else
+        {
+            joint = obj.AddComponent<SpringJoint2D>();
+            joint.connectedBody = childrenStack.Peek().GetComponent<Rigidbody2D>();
+            
+        }
         AddToStack(obj);
-
         // change the name of the object, you may wish to use something different 
         // to denote the different powerups 
-        
+
 
         var Type = newChild.GetComponent<PowerUp>();
 
@@ -74,6 +85,8 @@ public class PlayerPowers : MonoBehaviour
         // remove all powerup component scripts from the clone 
         // otherwise you will have an infinite loop and it will crash your PC
         Destroy(obj.GetComponent<PowerUp>());
+        
+        
 
         // how many children are already attached to the player?
         // you may wish to use a specific powerup name to see how many powerups are already applied
@@ -147,8 +160,9 @@ public class PlayerPowers : MonoBehaviour
             Debug.Log("click");
             Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             var dir = worldPosition - transform.position;
-
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, new Vector2(dir.x, dir.y));
+            var distance = dir.magnitude;
+             dir = dir.normalized;
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, new Vector2(dir.x, dir.y), distance);
             if (hit.collider != null)
             {
                 if (hit.collider.gameObject.tag == "clickable" && childrenStack.Count > 0)
