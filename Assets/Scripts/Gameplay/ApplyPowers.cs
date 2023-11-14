@@ -12,10 +12,10 @@ public class ApplyPowers : MonoBehaviour
     private float rotateSpeed = 0;
     private float rotatePolarity = 1;
     private Vector3 rotateDir = new Vector3(0, 0, 10);
-    private float[,] rotation;
+    private float[,] rotation = { { 90, 90},{90,90} };
     private float curRot;
     bool startShot = true;
-
+    private float[,] scalingVector ={ { 2, 0 }, { 0, 2 } };
     private Vector3 mouseOrigin;
     private Vector3 newMouse;
     
@@ -50,9 +50,10 @@ public class ApplyPowers : MonoBehaviour
                 Debug.Log("released");
 
                 var velocity = mouseOrigin - newMouse;
-                var newSpeed = velocity.magnitude;
-                
-               transform.position += new Vector3(velocity.x, velocity.y, 0) * Time.deltaTime * 25 * newSpeed ;
+                velocity = Vector3.ClampMagnitude(velocity, 5);
+
+
+               transform.position +=  new Vector3(velocity.x, velocity.y, 0) ;
                 //GetComponent<Rigidbody2D>().AddForce(new Vector3(velocity.x, velocity.y, 0) * Time.deltaTime * newSpeed );
 
                 shoot = false;
@@ -79,7 +80,14 @@ public class ApplyPowers : MonoBehaviour
                 rotateSpeed += 10;
                 break;
             case "ScalePower":
-                transform.localScale += new Vector3(2, 2, 0);
+
+
+                /*Vector3 origPos = transform.position;
+                transform.position -= transform.localScale;*/
+
+                transform.localScale = DotTranformations("Scale", scalingVector);
+                //transform.position = origPos + transform.localPosition;
+                
                 break;
             case "ReverseSpeedPower":
                 speedPolarity *= -1;
@@ -95,5 +103,16 @@ public class ApplyPowers : MonoBehaviour
                     break;
 
         }
+    }
+
+
+    private Vector3 DotTranformations(string type, float[,] transformations)
+    {
+        Vector3 transformer = new Vector3(0,0,0);
+        if(type == "Scale")
+        {
+            transformer = gameObject.transform.localScale;
+        }
+        return new Vector3((transformer.x * transformations[0, 0]) + (transformer.y * transformations[0, 1]), (transformer.x * transformations[1, 0]) + (transformer.y * transformations[1, 1]), transformer.z);
     }
 }

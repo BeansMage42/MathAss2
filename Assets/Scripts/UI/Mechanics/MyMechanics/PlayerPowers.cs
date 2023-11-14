@@ -188,10 +188,14 @@ public class PlayerPowers : MonoBehaviour
         
         if(target.GetComponent<ApplyPowers>() == null)
         {
-           target.AddComponent<ApplyPowers>();
+           powerApply = target.AddComponent<ApplyPowers>();
+        }
+        else
+        {
+            powerApply = target.GetComponent<ApplyPowers>();
         }
         
-            powerApply = target.GetComponent<ApplyPowers>();
+            
         
         
         var nextPow = childrenStack.Pop();
