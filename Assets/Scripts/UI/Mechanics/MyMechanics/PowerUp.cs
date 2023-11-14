@@ -9,7 +9,11 @@ public class PowerUp : MonoBehaviour
     {
         TRANSLATE = 0,
         ROTATE,
-        SCALE
+        SCALE,
+        ReverseSpeed,
+        ReverseRotation,
+        Shoot
+
 
     };
     [SerializeField]
@@ -129,8 +133,6 @@ public class PowerUp : MonoBehaviour
             {
                 case PowerupType.TRANSLATE:
 
-
-
                   //  Debug.Log("Translate");
                     childname = "TranslatePower";
                     break;
@@ -138,7 +140,16 @@ public class PowerUp : MonoBehaviour
                     childname = "RotatePower";
                     break;
                 case PowerupType.SCALE:
-                    childname = "RotatePower";
+                    childname = "ScalePower";
+                    break;
+                case PowerupType.ReverseSpeed:
+                    childname = "ReverseSpeedPower";
+                    break;
+                case PowerupType.ReverseRotation :
+                    childname = "ReverseRotatePower";
+                    break;
+                case PowerupType.Shoot:
+                    childname = "ShootPower";
                     break;
             }
 
