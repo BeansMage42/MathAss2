@@ -123,12 +123,12 @@ namespace Platformer.Mechanics
             if (move.x > 0.01f)
             {
                 spriteRenderer.flipX = false;
-                powers.FlipDirection();
+               // powers.FlipDirection(1);
             }
             else if (move.x < -0.01f)
             {
                 spriteRenderer.flipX = true;
-                powers.FlipDirection();
+                //powers.FlipDirection(2);
             }
             animator.SetBool("grounded", IsGrounded);
             animator.SetFloat("velocityX", Mathf.Abs(velocity.x) / maxSpeed);

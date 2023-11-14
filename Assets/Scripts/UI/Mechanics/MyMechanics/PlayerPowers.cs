@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,10 +8,14 @@ public class PlayerPowers : MonoBehaviour
     [SerializeField]
     public Vector3 offset;
     [SerializeField]
-
+    private GameObject attatchPoint;
 
     string powerName;
     int numChildren = 1;
+
+    private bool flipped;
+
+   // [SerializeField] private ApplyPowers powerScript;
     public List<GameObject> GetChildren(GameObject obj)
     {
        // Debug.Log("GetChildren");
@@ -54,7 +57,7 @@ public class PlayerPowers : MonoBehaviour
     }
     private void AddChild(GameObject newChild)
     {
-        var obj = Instantiate(newChild, transform);
+        var obj = Instantiate(newChild, attatchPoint.transform);
         AddToStack(obj);
 
         // change the name of the object, you may wish to use something different 
@@ -103,12 +106,26 @@ public class PlayerPowers : MonoBehaviour
 
     }
 
-    public void FlipDirection()
+    public void FlipDirection(int direction)
     {
-        foreach (Transform child in gameObject.transform)
+        /*Debug.Log("flip" + direction);
+
+        if(direction == 1 && flipped)
         {
-            
+            Debug.Log("right");
+            flipped = false;
+            attatchPoint.transform.position = attatchPoint.transform.position + new Vector3(2, 0, 0);
+            attatchPoint.transform.localScale = new Vector3 (-attatchPoint.transform.localScale.x, attatchPoint.transform.localScale.y, attatchPoint.transform.localScale.z);
+           
         }
+        if(direction == 2 && !flipped)
+        {
+            Debug.Log("left");
+            flipped = true;
+            attatchPoint.transform.localScale = new Vector3(-attatchPoint.transform.localScale.x, attatchPoint.transform.localScale.y, attatchPoint.transform.localScale.z);
+            attatchPoint.transform.position = attatchPoint.transform.position - new Vector3(2, 0, 0);
+        }*/
+        
     }
 
     private void Update()
@@ -125,13 +142,50 @@ public class PlayerPowers : MonoBehaviour
                 Destroy(obj);
             }
         }
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            Debug.Log("click");
+            Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            var dir = worldPosition - transform.position;
+
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, new Vector2(dir.x, dir.y));
+            if (hit.collider != null)
+            {
+                if (hit.collider.gameObject.tag == "clickable" && childrenStack.Count > 0)
+                {
+                    Debug.Log(hit.collider.gameObject.name);
+                    UsePower(hit.collider.gameObject);
+                }
+            }
+            Debug.DrawRay(transform.position, new Vector2(dir.x, dir.y), Color.green);
+        
     }
+}
     public GameObject GetTopPower()
     {
 
         return childrenStack.Peek();
     }
 
+    private void UsePower(GameObject target)
+    {
+        ApplyPowers powerApply;
+        numChildren--;
+        
+        if(target.GetComponent<ApplyPowers>() == null)
+        {
+           target.AddComponent<ApplyPowers>();
+        }
+        
+            powerApply = target.GetComponent<ApplyPowers>();
+        
+        
+        var nextPow = childrenStack.Pop();
+        powerApply.AddPower(nextPow.name);
+        
+        
+        Destroy(nextPow);
+    }
     /*public int GetPowerUp(string nam)
     {
        return FindChildrenWithName(nam).Count;
